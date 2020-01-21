@@ -1,0 +1,50 @@
+{% extends "base_generic.html" %}
+
+{% block navbar %}
+<li class="nav-item active">
+  <a class="nav-link font-weight-bold" href="{% url 'social:begin' 'google-oauth2' %}">
+    Import csv
+    <span class="sr-only">(current)</span>
+  </a>
+</li>
+<li class="nav-item">
+  <a class="nav-link font-weight-bold" href="{% url 'social:begin' 'google-oauth2' %}">
+    Export csv
+  </a>
+</li>
+<li class="nav-item">
+  <a class="nav-link font-weight-bold" href="{% url 'helpPage' %}">
+    Help
+  </a>
+</li>
+{% endblock %}
+
+{% block content %}
+
+    <main role="main" class="container">
+      <div class="container">
+        <div class="jumbotron">
+          <h5>Mass import and export tool for Google Calendar</h5>
+          <hr class="my-4">
+          <div class="text-left p-2">
+            <p>You need to login with a Google account in order to use the import and export features. <br> You can view the help page without login in to find out more
+              about the process.</p>
+          </div>
+        </div>
+      </div>
+      <div class="container">
+        <div class="row">
+          <div class="col"> <h5>Import csv</h5> <br><p>
+            You can use this page to import multiple events to one of your Google Calendars. Pick the calendar you want to add the events to and upload a .csv file with the correct format.
+          There are more detailed instructions under the form and you can visit the <a href="{% url 'helpPage' %}">help</a> page to check the format for the .csv file.</p>
+          </div>
+          <div class="col"><h5>Export csv</h5> <br> <p> You can use this page to download a .csv file with any events between two dates. Pick the calendar and the desired dates
+            and you can download a .csv file with any events between them. The format of the .csv file is created automaticaly.</p>
+          </div>
+          <div class="col"><h5>Help page</h5> <br> <p> This page has information about the format of the .csv file you can upload.</p>
+          </div>
+          <div class="w-100"></div>
+        </div>
+      </div>
+    </main>
+{% endblock %}

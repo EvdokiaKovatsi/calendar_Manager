@@ -1,0 +1,107 @@
+{% extends "base_generic.html" %}
+{% load staticfiles %}
+
+{% block navbar %}
+<li class="nav-item">
+  <a class="nav-link font-weight-bold" href="{% url 'importCSV' %}">
+    Import csv
+  </a>
+</li>
+<li class="nav-item active">
+  <a class="nav-link font-weight-bold" href="{% url 'exportCalendar' %}">
+    Export csv
+    <span class="sr-only">(current)</span>
+  </a>
+</li>
+<li class="nav-item">
+  <a class="nav-link font-weight-bold" href="{% url 'helpPage' %}">
+    Help
+  </a>
+</li>
+{% endblock %}
+
+{% block content %}
+<main role="main" class="container">
+  <div class="container mt-5">
+    <div class="text-center my-5">
+      <p class="h1"><strong>Get events from your Google Calendar</strong></p>
+      <p class="h4">Download a .csv file with the events between two dates</p>
+    </div>
+  </div>
+<div class="container">
+  <div class="jumbotron">
+    <p class="lead">Choose between which dates you want to export events</p>
+    <form name="ExportForm" method="POST">
+      {% csrf_token %}
+      <div class="form-row">
+        <div class="col">
+          <label for="calendar_list">Calendar:</label>
+          {{ form.calendar_choices }}
+        </div>
+        <div class="col">
+          <label for="timeMin">From:</label>
+          {{ form.timeMin }}
+        </div>
+        <div class="col">
+          <label for="timeMax">Until:</label>
+          {{ form.timeMax }}
+        </div>
+      </div>
+        <input type="submit" class="btn btn-primary" value="Export"/>
+    </form>
+    </div>
+  </div>
+  <div class="container">
+    <div class="row">
+      <div class="text-left p-2">
+        <p><mark>This tool is used to export events from a Google Calendar. You can pick a calendar and the two dates and download a .csv file with all the events in between.
+          You can also add multiple events in your Google Calendar by clicking the import
+          csv link from the menu at the top of the page.
+        </mark></p>
+      </div>
+    </div>
+  </div>
+    <div class="container">
+      <div class="row">
+        <div class="col text-center"><img style="width:250px; height:250px;"
+          alt="calendar arrow csv" src="{% static 'manager/calendar_csv.png'%}"/></div>
+        <div class="col-8"><h5>How to export your events to a .csv file</h5> <p>
+            <ul>
+              <li>Pick the calendar you want to export from.</li>
+              <li>Pick the starting date of the events you want to export.</li>
+              <li>Pick the last date of the events you want to export.</li>
+              <li>Click on the "Export" button.</li>
+              <li>You can choose where to save the .csv file on your computer.</li>
+            </ul>
+            <br></p>
+        </div>
+      </div>
+    </div>
+</main>
+    <script>
+    // Used to toggle the menu on small screens when clicking on the menu button
+      function myFunction() {
+        var x = document.getElementById("navDemo");
+        if (x.className.indexOf("w3-show") == -1) {
+          x.className += " w3-show";
+        } else {
+          x.className = x.className.replace(" w3-show", "");
+        }
+      }
+
+      $(function () {
+          $("#id_timeMax").datetimepicker({
+            format: 'd/m/Y H:i',
+          });
+        });
+
+      $(function () {
+        $("#id_timeMin").datetimepicker({
+          format: 'd/m/Y H:i',
+        });
+      });
+    </script>
+
+
+
+{% endblock %}

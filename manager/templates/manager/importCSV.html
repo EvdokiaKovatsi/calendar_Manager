@@ -1,0 +1,111 @@
+{% extends "base_generic.html" %}
+{% load staticfiles %}
+
+{% block navbar %}
+<li class="nav-item active">
+  <a class="nav-link font-weight-bold" href="{% url 'importCSV' %}">
+    Import csv
+    <span class="sr-only">(current)</span>
+  </a>
+</li>
+<li class="nav-item">
+  <a class="nav-link font-weight-bold" href="{% url 'exportCalendar' %}">
+    Export csv
+  </a>
+</li>
+<li class="nav-item">
+  <a class="nav-link font-weight-bold" href="{% url 'helpPage' %}">
+    Help
+  </a>
+</li>
+{% endblock %}
+
+{% block content %}
+
+    <main role="main" class="container">
+      <div class="container mt-5">
+        <div class="text-center my-5">
+          <p class="h1"><strong>Fill your calendar</strong></p>
+          <p class="h4">Add multiple events to your Google Calendar from a .csv file</p>
+        </div>
+      </div>
+      <div class="container">
+        <div class="jumbotron">
+          <p class="lead">Choose the .csv file you want to upload and the calendar you want to add the events to</p>
+          <form name="ImportForm" method="POST" enctype="multipart/form-data">{% csrf_token %}
+            <div class="form-row">
+              <div class="col">
+                <label for="upload_csv">File:</label>
+                {{ form.upload_csv }}
+              </div>
+              <div class="col">
+                <label for="calendar_choices">Calendar:</label>
+                {{ form.calendar_choices }}
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Upload</button>
+          </form>
+        </div>
+      </div>
+      {% if errorMessage %}
+      <div class="container">
+        <div class="row">
+          <div class="alert alert-danger" role="alert">
+            File must be in a .csv format
+          </div>
+        </div>
+      </div>
+      {% endif %}
+      <div class="container">
+        <div class="row">
+          <div class="text-left p-2">
+            <p><mark>This tool is used to add multiple events in your Google Calendar, including repeating events. You can upload a .csv file
+              and pick one of your Google Calendars to add all the events. You can also export all your Google Calendar events between two dates to a .csv file by clicking the export
+              csv link from the menu at the top of the page.
+            </mark></p>
+          </div>
+        </div>
+      </div>
+      <div class="container">
+        <div class="row">
+          <div class="col text-center"><img style="width:250px; height:250px;"
+            alt="csv arrow calendar" src="{% static 'manager/csv_calendar.png'%}"/></div>
+          <div class="col-8"><h5>How to convert your .csv file</h5> <br><p>
+              <ul>
+                <li>Click the "Choose file" button.</li>
+                <li>Pick your .csv file with the events you wish to add to your Google Calendar. Click <a href="{% url 'helpPage' %}">here </a> to go to the help page and see what your .csv file's format should look like.</li>
+                <li>Pick one of your Google calendars from the dropdown list. The events from the .csv file will be added to that calednar.</li>
+                <li>Click the "Upload" button to complete the process. The events will be added to the Google Calendar you chose. A new tab will open that will show you your Google Calendar
+                so you can verify that everything is ok.</li>
+              </ul>
+              <br></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="row">
+          <div class="col"><h5>Creating a .csv file</h5> <br><p>
+            You can use Microsoft Excel, LibreOffice Calc or Google Sheets to create a .csv file. Remember to click "save as" in order to make sure the file
+          is saved in a .csv format because "save" saves the file in the default format of the tool which might be different.</p>
+          </div>
+          <div class="col"><h5>Safety</h5> <br> <p> This application uses the Google Calendar api to ensure the safety of your data. The .csv file you upload is not
+          kept after the process.</p>
+          </div>
+          <div class="col"><h5>Univercity project</h5> <br> <p>This is a project for Harokopio Univercity of Athens. Therefore it is and will remain free to use.</p>
+          </div>
+          <div class="w-100"></div>
+          <div class="col"><h5>Univercity project</h5> <br> <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin diam ante, tempor a nisi porta,
+            euismod tristique magna. Ut sed tellus non libero sagittis lacinia ultrices egestas augue.</p>
+          </div>
+          <div class="col"><h5>Csv files</h5> <br> <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin diam ante, tempor a nisi porta,
+            euismod tristique magna. Ut sed tellus non libero sagittis lacinia ultrices egestas augue.</p>
+          </div>
+          <div class="col"> <h5>Calendar selection</h5> <br> <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin diam ante, tempor a nisi porta,
+            euismod tristique magna. Ut sed tellus non libero sagittis lacinia ultrices egestas augue.</p>
+          </div>
+        </div>
+      </div>
+
+    </main>
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends "base_generic.html" %}
+
+{% block navbar %}
+<li class="nav-item">
+  <a class="nav-link font-weight-bold" href="{% url 'social:begin' 'google-oauth2' %}">
+    Import csv
+  </a>
+</li>
+<li class="nav-item">
+  <a class="nav-link font-weight-bold" href="{% url 'social:begin' 'google-oauth2' %}">
+    Export csv
+  </a>
+</li>
+<li class="nav-item active">
+  <a class="nav-link font-weight-bold" href="{% url 'helpPage' %}">
+    Help
+    <span class="sr-only">(current)</span>
+  </a>
+</li>
+{% endblock %}
+
+{% block content %}
+  <div class="jumbotron">
+    <div class="container-fluid">
+      <p>The format for the .csv file you want to upload in the import csv page. The .csv file from the export csv page is created automaticaly.</p>
+    </div>
+    <div class="container-fluid">
+      <table class="table table-bordered">
+        <thead class="thead-dark">
+          <tr>
+            <th>event_name</th>
+            <th>date</th>
+            <th>start</th>
+            <th>end</th>
+            <th>professors</th>
+            <th>location</th>
+            <th>recurrence</th>
+            <th>description</th>
+          </tr>
+        </thead>
+          <tbody>
+            <tr>
+              <td>The name of the event you wish to add. It will appear as written in the calendar.</td>
+              <td>The date of the event. It must be in YYY-MM-DD format. If the event repeats, this is the date of the first time the event happens.</td>
+              <td>The time the event starts. It must be in HH:MM format.</td>
+              <td>The time the event ends. It must be in HH:MM format.</td>
+              <td>The emails of the attendees of the event. If there are more than one, they must be seperated with a comma (ex: email@gmail.com, email2@gmail.com)</td>
+              <td>The location of the event. It doesn't have to be a map location. It can just be "floor 2".</td>
+              <td>If the event is a recurring event write the date the event should stop repeating. It must be in YYYY-MM-DD format. The event
+                will repeat at the same day once per week.(ex: if the event starts at 2020-01-10 which is a Friday and the recurrence field is 2020-02-07 the event will
+                repeat every Friday untli 2020-02-07).</td>
+              <td>A description for the event.</td>
+            </tr>
+          </tbody>
+      </table>
+    </div>
+    <div class="container-fluid">
+        <p class="text-danger">Warning:</p><p>The file must be in a .csv format. Be careful because Microsoft Excel and LibreOffice
+          save as a default to a different format so you must click "save as" and save the file in a .csv format</p>
+    </div>
+  </div>
+
+
+{% endblock %}
