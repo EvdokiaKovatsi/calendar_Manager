@@ -20,12 +20,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '=ch42o6ivi(y3)&&h-a2)w_bj8**d&w*!_fz*o#=1th3d_ly01'
-
+#SECRET_KEY = '=ch42o6ivi(y3)&&h-a2)w_bj8**d&w*!_fz*o#=1th3d_ly01'
+import os
+SECRET_KEY = os.environ['SECRET_KEY']
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['evdokiaKov.pythonanywhere.com']
 
 
 # Application definition
@@ -116,6 +117,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
@@ -141,3 +144,4 @@ LOGOUT_REDIRECT_URL = '/manager'
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
 
 STATIC_URL = '/static/'
+STATIC_ROOT = ''
