@@ -133,3 +133,6 @@ dmypy.json
 
 #Database
 *.sqlite3
+
+#security_secrets
+secret_keys.py

@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
-
+from .secret_keys import *
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -20,7 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '+6fmf+9+gp0q@8zsa5j=vgn0889zbs44$@43va@j4d&tvjm%uk'
+#NEED TO ADD A SECRET_KEY FROM A secret_keys.py FILE
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -46,8 +46,7 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '547073599529-ftgstbvt72tna9jkvnleutekft151n1j.apps.googleusercontent.com'
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'wOD9hQAibocZAT9RFUk5BRA4'
+#NEED TO ADD GOOGLE OAUTH2 KEY AND SECRET FROM A secret_keys.py FILE
 SOCIAL_AUTH_GOOGLE_OAUTH2_AUTH_EXTRA_ARGUMENTS = {'access_type': 'offline'}
 SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = ['https://www.googleapis.com/auth/calendar',
     'https://www.googleapis.com/auth/calendar.readonly',

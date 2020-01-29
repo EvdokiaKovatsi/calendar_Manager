@@ -16,24 +16,27 @@ SCOPES = ['https://www.googleapis.com/auth/calendar',
     'https://www.googleapis.com/auth/calendar.events',
     'https://www.googleapis.com/auth/calendar.events.readonly']
 
-GMT_OFF = '+02:00' #Athens/GMT +2
 
 calendar_choices = {}
 page_token = None
 
 # Create your views here.
 
-
+#This is a view for the first page the user sees. It only loads the page.
 def index(request):
-    msg = 'hi'
 
-    context = {
-        'current': msg
-        if request.user.is_authenticated else[]
-    }
+    return render(request, 'manager/index.html')
 
-    return render(request, 'manager/index.html', context)
-
+#The view called when the user wants to upload a CSV file.
+#When called with GET:
+#the view builds a calendar to call the API and create a list with
+#the user's calendars. The view loads the page importCSV and fills the
+#list in the form with the user's calendars.
+####
+#When called with POST:
+#the view builds a calendar, collects the user data from the form,
+#calls the function populate_calendar to create EVENT resources
+#and calls the API to add the events. It then loads the page again.
 @login_required
 def importCSV(request):
     page_token = None
@@ -83,6 +86,20 @@ def importCSV(request):
     }
     return render(request, 'manager/importCSV.html', context)
 
+#The view called when the user wants to download events.
+#When called with GET:
+#the view builds a calendar to call the API and create a list with
+#the user's calendars. The view loads the page exportCalendar and fills the
+#list in the form with the user's calendars.
+####
+#When called with POST:
+#the view builds a calendar, collects the user data from the form,
+#calls the API to gather the events,
+#creates a writer to fill the CSV file,
+#makes the data from the API more user friendly
+#writes them to the CSV file
+#return response opens a window for the user to choose where to save the file.
+#It then loads the page again.
 @login_required
 def exportCalendar(request):
 
@@ -143,8 +160,7 @@ def exportCalendar(request):
                 writer.writerow([event['summary'], date, start[0],
                         end[0], attendees, location, description])
 
-        else:
-            print('here')
+
         return response
 
     else:
@@ -169,29 +185,22 @@ def exportCalendar(request):
             }
         return render(request, 'manager/exportCalendar.html', context)
 
+#This view loads the Help page.
 def helpPage(request):
 
     return render(request, 'manager/helpPage.html')
 
+#This view calls the django view logout and then loads the first page.
 def logoutView(request):
     logout(request)
     return render(request, 'manager/index.html')
 
-#    EVENT = {
-#        'summary': 'Dinner with friends',
-#        'start': {'dateTime': '2018-11-22T15:00:00%s' % GMT_OFF},
-#        'end': {'dateTime': '2018-11-22T18:00:00%s' % GMT_OFF},
-#    }
-#"""
-#CREATING EVENT NOTES
-#-if more than one email in attendees throws error. Create an if that checks
-#if there are more than one attendee and if so makes the string into a list
-#called attendees[].
-#-Dates that there should not be events at. Modify/Delete events in these
-#days.
-#"""
-#Timestamps require the format: "YYYY-MM-DDTHH:MM:SS+GMT_OFF"
 
+#Timestamps require the format: "YYYY-MM-DDTHH:MM:SS+GMT_OFF"
+#This function creates an EVENT resource to send to the Google Calendar API.
+#the summary, start and end fields are mandatory
+#the location and description are strings so they can be empty
+#the attendees and recurrence need to be checked and changed accordingly.
 def populate_calendar(csv_row):
 
 
@@ -225,6 +234,8 @@ def populate_calendar(csv_row):
 
     return EVENT
 
+#This view uses the logged in user's credentials to create
+#a calendar which is used to make API calls.
 def build_calendar(request):
 
     user = request.user
