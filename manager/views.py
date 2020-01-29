@@ -1,17 +1,15 @@
-from django.shortcuts import render, redirect
-from django.http import HttpResponse, HttpResponseRedirect
-from django.urls import reverse, reverse_lazy
+from django.shortcuts import render
+from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
-from django.conf import settings
+from django.contrib.auth import logout
 
 from .forms import ImportForm, ExportForm
 
 from apiclient import discovery
-from httplib2 import Http
-from oauth2client import file, client, tools
+import google.oauth2.credentials
 
 import csv
-from datetime import datetime
+
 
 SCOPES = ['https://www.googleapis.com/auth/calendar',
     'https://www.googleapis.com/auth/calendar.readonly',
@@ -23,7 +21,6 @@ GMT_OFF = '+02:00' #Athens/GMT +2
 calendar_choices = {}
 page_token = None
 
-errorMessage = False
 # Create your views here.
 
 
@@ -82,7 +79,7 @@ def importCSV(request):
     context = {
         'form': form,
         'errorMessage': errorMessage
-        if request.user.is_authenticated else[]
+
     }
     return render(request, 'manager/importCSV.html', context)
 
@@ -168,13 +165,17 @@ def exportCalendar(request):
 
         context = {
             'form' : form
-            if request.user.is_authenticated else[]
+
             }
         return render(request, 'manager/exportCalendar.html', context)
 
 def helpPage(request):
 
     return render(request, 'manager/helpPage.html')
+
+def logoutView(request):
+    logout(request)
+    return render(request, 'manager/index.html')
 
 #    EVENT = {
 #        'summary': 'Dinner with friends',
@@ -189,9 +190,10 @@ def helpPage(request):
 #-Dates that there should not be events at. Modify/Delete events in these
 #days.
 #"""
+#Timestamps require the format: "YYYY-MM-DDTHH:MM:SS+GMT_OFF"
 
 def populate_calendar(csv_row):
-    #Timestamps require the format: "YYYY-MM-DDTHH:MM:SS+GMT_OFF"
+
 
     EVENT = {
         'summary': csv_row['event_name'],
@@ -202,7 +204,7 @@ def populate_calendar(csv_row):
         'end': {
             'dateTime': csv_row['date']+'T'+csv_row['end']+':00',
             'timeZone' : 'Europe/Athens'},
-        #'attendees': [{ 'email' : csv_row['professors'] }],
+
         'location': csv_row['location'],
         'description': csv_row['description'],
     }
@@ -213,30 +215,22 @@ def populate_calendar(csv_row):
         for professor in professors:
             professor = professor.replace(' ','')
             temp.append({'email': professor})
-            #check if recurrence is empty
+        #'attendees': [{ 'email' : csv_row['professors'] }],
         EVENT['attendees'] = temp
+
     if csv_row['recurrence'] != '':
         until = csv_row['recurrence'].replace('-','')
         recurrence = ['RRULE:FREQ=WEEKLY;UNTIL='+until+'T230000Z']
         EVENT['recurrence'] = recurrence
-    print(EVENT)
+
     return EVENT
 
 def build_calendar(request):
-    revoke_uri = None
-    user_agent = 'PythonSocialAuth'
 
     user = request.user
     social = user.social_auth.get(provider='google-oauth2')
-    creds = client.OAuth2Credentials(
-        social.extra_data['access_token'],
-        settings.SOCIAL_AUTH_GOOGLE_OAUTH2_KEY,
-        settings.SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET,
-        social.extra_data['refresh_token'],
-        datetime.fromtimestamp(social.extra_data['auth_time']),
-        revoke_uri,
-        user_agent,
-        settings.SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE
-    )
-    GCAL = discovery.build('calendar', 'v3', http=creds.authorize(Http()))
+
+    creds = google.oauth2.credentials.Credentials(social.extra_data['access_token'])
+    #GCAL = discovery.build('calendar', 'v3', http=creds.authorize(Http()))
+    GCAL = discovery.build('calendar', 'v3', credentials = creds)
     return GCAL
